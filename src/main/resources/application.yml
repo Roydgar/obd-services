@@ -1,0 +1,24 @@
+spring:
+  security:
+    basic:
+      enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: none
+  datasource:
+    url: jdbc:mysql://localhost:3306/odb?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: root
+    password: root
+    driverClassName: com.mysql.jdbc.Driver
+
+server:
+  port: ${PORT:8080}
+
+file-storage:
+  logFileTypeToInfoMap:
+    CAR_LOG:
+      fileNameFormat: car_log_%d.csv
+      path: car-logs
+    CAR_ERROR_LOG:
+      fileNameFormat: car_log_%d.txt
+      path: car-error-logs
