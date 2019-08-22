@@ -1,0 +1,12 @@
+spring:
+  cloud:
+    gcp:
+      sql:
+        instance-connection-name: obd-services:europe-west1:obd-services-sql-db
+        database-name: obd-backend-db
+  security:
+    basic:
+      enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: create
