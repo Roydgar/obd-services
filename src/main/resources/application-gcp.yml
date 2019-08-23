@@ -11,3 +11,8 @@ spring:
     database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: create
+    datasource:
+      url: jdbc:mysql://146.148.21.29:3306/obd-backend-db?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+      username: root
+      password: root
+      driverClassName: com.mysql.jdbc.Driver
