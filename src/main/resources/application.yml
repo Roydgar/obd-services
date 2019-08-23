@@ -1,3 +1,7 @@
+logging:
+  level:
+    org:
+      springframework: DEBUG
 file-storage:
   logFileTypeToInfoMap:
     CAR_LOG:
