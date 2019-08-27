@@ -13,7 +13,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>obd-services</name>
 	<description>Demo project for Sapplication.ymlpspring-cloud-bootstrap.propertiesring Boot</description>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
 	<properties>
 		<java.version>1.8</java.version>
