@@ -15,6 +15,7 @@ resources:
     - name: ramdisk1
       volume_type: tmpfs
       size_gb: 0.5
+
 # Automatic Scaling
 automatic_scaling:
   min_num_instances: 1
