@@ -4,5 +4,5 @@ file-storage:
       fileNameFormat: car_log_%d.csv
       path: car-logs
     CAR_ERROR_LOG:
-      fileNameFormat: car_log_%d.txt
+      fileNameFormat: car_error_log_%d.txt
       path: car-error-logs

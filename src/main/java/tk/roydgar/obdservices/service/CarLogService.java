@@ -12,7 +12,8 @@ import tk.roydgar.obdservices.domain.enums.LogFileType;
 import tk.roydgar.obdservices.exception.ExceptionFactory;
 import tk.roydgar.obdservices.mapper.request.CarLogRequestMapper;
 import tk.roydgar.obdservices.repository.CarLogRepository;
-import tk.roydgar.obdservices.util.FileStorage;
+import tk.roydgar.obdservices.util.storage.UniqueFileNameCreator;
+import tk.roydgar.obdservices.util.storage.FileStorage;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,6 +26,7 @@ public class CarLogService {
     private final CarService carService;
     private final CarLogRequestMapper carLogRequestMapper;
     private final FileStorage fileStorage;
+    private final UniqueFileNameCreator uniqueFileNameCreator;
 
     public CarLog getById(Long id) {
         return carLogRepository.findById(id)
@@ -50,7 +52,9 @@ public class CarLogService {
     }
 
     public byte[] getCarLogFileAsByteArray(Long id) {
-        return fileStorage.readFile(LogFileType.CAR_LOG, id);
+        CarLog carLog = carLogRepository.findById(id)
+                .orElseThrow(() -> ExceptionFactory.carLogNotFoundException(id));
+        return fileStorage.readFile(LogFileType.CAR_LOG, carLog.getFileName());
     }
 
     @Transactional
@@ -66,10 +70,14 @@ public class CarLogService {
         CarLog carLog = carLogRequestMapper.toEntity(request);
         Car car = carService.getById(request.getCarId());
         carLog.setCar(car);
-        CarLog savedCarLog = carLogRepository.save(carLog);
+        CarLog carLogWithId = carLogRepository.save(carLog);
 
-        fileStorage.storeFile(LogFileType.CAR_LOG, savedCarLog.getId(), multipartFile.getBytes());
-        return savedCarLog;
+        String fileName = uniqueFileNameCreator.createFileName(LogFileType.CAR_LOG, carLogWithId.getId());
+        carLogWithId.setFileName(fileName);
+        carLogRepository.save(carLogWithId);
+
+        fileStorage.storeFile(LogFileType.CAR_LOG, fileName, multipartFile.getBytes());
+        return carLogWithId;
     }
 
 }

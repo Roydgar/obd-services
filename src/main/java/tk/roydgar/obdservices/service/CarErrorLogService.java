@@ -12,7 +12,8 @@ import tk.roydgar.obdservices.domain.enums.LogFileType;
 import tk.roydgar.obdservices.exception.ExceptionFactory;
 import tk.roydgar.obdservices.mapper.request.CarErrorLogRequestMapper;
 import tk.roydgar.obdservices.repository.CarErrorLogRepository;
-import tk.roydgar.obdservices.util.FileStorage;
+import tk.roydgar.obdservices.util.storage.UniqueFileNameCreator;
+import tk.roydgar.obdservices.util.storage.FileStorage;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,6 +26,7 @@ public class CarErrorLogService {
     private final CarService carService;
     private final CarErrorLogRequestMapper carErrorLogRequestMapper;
     private final FileStorage fileStorage;
+    private final UniqueFileNameCreator uniqueFileNameCreator;
 
     public CarErrorLog getById(Long id) {
         return carErrorLogRepository.findById(id)
@@ -50,7 +52,9 @@ public class CarErrorLogService {
     }
 
     public byte[] getCarLogFileAsByteArray(Long id) {
-        return fileStorage.readFile(LogFileType.CAR_ERROR_LOG, id);
+        CarErrorLog carErrorLog = carErrorLogRepository.findById(id)
+                .orElseThrow(() -> ExceptionFactory.carErrorLogNotFoundException(id));
+        return fileStorage.readFile(LogFileType.CAR_ERROR_LOG, carErrorLog.getFileName());
     }
 
     @Transactional
@@ -66,11 +70,14 @@ public class CarErrorLogService {
         CarErrorLog carErrorLog = carErrorLogRequestMapper.toEntity(request);
         Car car = carService.getById(request.getCarId());
         carErrorLog.setCar(car);
-        CarErrorLog savedCarErrorLog =  carErrorLogRepository.save(carErrorLog);
+        CarErrorLog carErrorLogWithId =  carErrorLogRepository.save(carErrorLog);
 
-        fileStorage.storeFile(LogFileType.CAR_ERROR_LOG, savedCarErrorLog.getId()
-                , file.getBytes());
-        return savedCarErrorLog;
+        String fileName = uniqueFileNameCreator.createFileName(LogFileType.CAR_ERROR_LOG, carErrorLogWithId.getId());
+        carErrorLogWithId.setFileName(fileName);
+        carErrorLogRepository.save(carErrorLogWithId);
+
+        fileStorage.storeFile(LogFileType.CAR_ERROR_LOG, fileName, file.getBytes());
+        return carErrorLogWithId;
     }
 
 }

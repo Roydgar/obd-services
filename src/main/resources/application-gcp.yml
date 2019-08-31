@@ -1,14 +1,23 @@
 spring:
+  datasource:
+    username: root
+    password: root
+    driverClassName: com.mysql.jdbc.Driver
+  cloud:
+    gcp:
+      sql:
+        instance-connection-name: obd-services-251511:europe-west1:obd-services-backend
+        database-name: obd
+
   security:
     basic:
       enabled: false
   jpa:
-    database-platform:
-      org.hibernate.dialect.MySQL5InnoDBDialect
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
       ddl-auto: update
-  datasource:
-    url: jdbc:mysql://35.233.86.171/obd
-    username: root
-    password: root
-    driverClassName: com.mysql.cj.jdbc.Driver
+
+google:
+  storage:
+    bucket-name:
+      obd-services-251511.appspot.com
