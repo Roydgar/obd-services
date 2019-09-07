@@ -5,6 +5,7 @@ spring:
     driverClassName: com.mysql.jdbc.Driver
   cloud:
     gcp:
+      project-id: obd-services-251511
       sql:
         instance-connection-name: obd-services-251511:europe-west1:obd-services-backend
         database-name: obd
@@ -21,3 +22,7 @@ google:
   storage:
     bucket-name:
       obd-services-251511.appspot.com
+
+pub-sub:
+  subscription-name: car-log-sub
+  enabled: false

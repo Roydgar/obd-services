@@ -97,6 +97,16 @@
                     <artifactId>google-cloud-storage</artifactId>
                     <version>1.89.0</version>
                 </dependency>
+                <dependency>
+                    <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-gcp-starter-pubsub</artifactId>
+                    <version>1.1.2.RELEASE</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.springframework.integration</groupId>
+                    <artifactId>spring-integration-core</artifactId>
+                    <version>5.1.7.RELEASE</version>
+                </dependency>
             </dependencies>
             <build>
                 <plugins>

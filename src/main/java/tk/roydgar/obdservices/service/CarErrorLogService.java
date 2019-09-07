@@ -12,6 +12,7 @@ import tk.roydgar.obdservices.domain.enums.LogFileType;
 import tk.roydgar.obdservices.exception.ExceptionFactory;
 import tk.roydgar.obdservices.mapper.request.CarErrorLogRequestMapper;
 import tk.roydgar.obdservices.repository.CarErrorLogRepository;
+import tk.roydgar.obdservices.util.MultipartLogFile;
 import tk.roydgar.obdservices.util.storage.UniqueFileNameCreator;
 import tk.roydgar.obdservices.util.storage.FileStorage;
 
@@ -51,10 +52,11 @@ public class CarErrorLogService {
         return createOrUpdate(updateCarErrorLogRequest, multipartFile);
     }
 
-    public byte[] getCarLogFileAsByteArray(Long id) {
+    public MultipartFile getCarLogFile(Long id) {
         CarErrorLog carErrorLog = carErrorLogRepository.findById(id)
                 .orElseThrow(() -> ExceptionFactory.carErrorLogNotFoundException(id));
-        return fileStorage.readFile(LogFileType.CAR_ERROR_LOG, carErrorLog.getFileName());
+        byte[] fileContent = fileStorage.readFile(LogFileType.CAR_ERROR_LOG, carErrorLog.getFileName());
+        return new MultipartLogFile(fileContent, carErrorLog.getFileName());
     }
 
     @Transactional

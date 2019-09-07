@@ -3,7 +3,7 @@ package tk.roydgar.obdservices.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import tk.roydgar.obdservices.domain.CarErrorLog;
@@ -15,6 +15,8 @@ import tk.roydgar.obdservices.service.CarErrorLogService;
 
 import java.io.IOException;
 import java.util.List;
+
+import static tk.roydgar.obdservices.util.WebEntityUtils.createFileResponse;
 
 @RestController
 @RequestMapping("api/car-error-log")
@@ -38,13 +40,9 @@ public class CarErrorLogController {
         return responseMapper.toDtoList(carErrorLogDtos);
     }
 
-    @GetMapping(
-            value = "/file/{id}",
-            produces = MediaType.APPLICATION_OCTET_STREAM_VALUE
-    )
-    public @ResponseBody
-    byte[] getFile(@PathVariable Long id) {
-        return carErrorLogService.getCarLogFileAsByteArray(id);
+    @GetMapping(value = "/file/{id}")
+    public ResponseEntity<byte[]> getFile(@PathVariable Long id) {
+        return createFileResponse(carErrorLogService.getCarLogFile(id));
     }
 
     @PostMapping
